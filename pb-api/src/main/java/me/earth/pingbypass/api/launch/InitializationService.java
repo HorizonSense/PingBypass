@@ -24,7 +24,7 @@ import me.earth.pingbypass.api.event.ShutdownEvent;
 import me.earth.pingbypass.api.gui.TitleScreenService;
 import me.earth.pingbypass.api.module.CommonModuleInitializer;
 import me.earth.pingbypass.api.plugin.PluginInitializer;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 
 /**
  * Helps with initializing {@link PingBypass} instances. Registers common commands, modules, etc.
@@ -34,7 +34,7 @@ import net.minecraft.client.Minecraft;
 public class InitializationService implements CommonCommandInitializer, CommonModuleInitializer {
     private final PreLaunchService preLaunchService;
     private final PingBypass pingBypass;
-    private final Minecraft mc;
+    private final MinecraftClient mc;
 
     public void init() {
         this.registerConfigs();

@@ -36,9 +36,9 @@ public class ModulesCommand extends AbstractPbCommand {
         }).then(arg("category", CategoryArgument.of(modules.getCategoryManager())).executes(ctx -> {
             Category category = ctx.getArgument("category", Category.class);
             print(Text.literal("Category ")
-                .append(Text.literal(category.getName()).withStyle(style ->
+                .append(Text.literal(category.getName()).styled(style ->
                         style.withColor(category.getColor()).applyFormats(Formatting.BOLD)))
-                .append(Text.literal(":").withStyle(Formatting.WHITE)));
+                .append(Text.literal(":").formatted(Formatting.WHITE)));
 
             pingBypass.getModuleManager().getModulesByCategory(category).forEach(module ->
                     print(ComponentUtil.getComponent(module, Formatting.AQUA)));

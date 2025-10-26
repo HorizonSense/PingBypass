@@ -7,7 +7,7 @@ import me.earth.pingbypass.api.event.SubscriberImpl;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.DiscardedPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -16,21 +16,21 @@ import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class ProtocolManager extends SubscriberImpl {
-    public static final DiscardedPayload PAYLOAD = new DiscardedPayload(new ResourceLocation(Constants.NAME_LOW, "processed"));
+    public static final DiscardedPayload PAYLOAD = new DiscardedPayload(new Identifier(Constants.NAME_LOW, "processed"));
 
-    private final Map<ResourceLocation, PacketHandler<?>> factories = new ConcurrentHashMap<>();
+    private final Map<Identifier, PacketHandler<?>> factories = new ConcurrentHashMap<>();
     private final PingBypass pingBypass;
 
-    public <T extends PBPacket> void register(ResourceLocation location, Function<FriendlyByteBuf, T> factory) {
+    public <T extends PBPacket> void register(Identifier location, Function<FriendlyByteBuf, T> factory) {
         register(location, factory, null);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends PBPacket> void register(ResourceLocation location, Function<FriendlyByteBuf, ? extends T> factory, @Nullable ProtocolHandler<? extends T> handler) {
+    public <T extends PBPacket> void register(Identifier location, Function<FriendlyByteBuf, ? extends T> factory, @Nullable ProtocolHandler<? extends T> handler) {
         factories.put(location, new PacketHandler<>((Function<FriendlyByteBuf, T>) factory, (ProtocolHandler<T>) handler));
     }
 
-    public @Nullable PBPacket handle(ResourceLocation location, FriendlyByteBuf buf) {
+    public @Nullable PBPacket handle(Identifier location, FriendlyByteBuf buf) {
         PacketHandler<?> handler = factories.get(location);
         if (handler != null) {
             return handler.factory.apply(buf);

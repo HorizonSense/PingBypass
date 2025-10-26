@@ -1,11 +1,10 @@
 package me.earth.pingbypass.api.resource;
 
-import lombok.SneakyThrows;
 import lombok.experimental.ExtensionMethod;
 import lombok.extern.slf4j.Slf4j;
 import me.earth.pingbypass.api.files.PathUtil;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.annotation.MethodsReturnNonnullByDefault;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.IoSupplier;
@@ -53,7 +52,7 @@ final class PbPackResources extends AbstractPackResources {
 
     @Override
     @Nullable
-    public IoSupplier<InputStream> getResource(PackType packType, ResourceLocation location) {
+    public IoSupplier<InputStream> getResource(PackType packType, Identifier location) {
         if (!packId().equals(location.getNamespace())
                 || !hasResource(location.getNamespace(), location.getPath())
                 || packType != PackType.CLIENT_RESOURCES) {
@@ -70,7 +69,7 @@ final class PbPackResources extends AbstractPackResources {
             try {
                 listResources(path).forEach(resource -> {
                     String rPath = "%s/%s".formatted(path, resource);
-                    output.accept(new ResourceLocation(packId(), rPath), () -> getInputStream(packId(), rPath));
+                    output.accept(new Identifier(packId(), rPath), () -> getInputStream(packId(), rPath));
                 });
             } catch (Throwable t) { // Exceptions thrown within this method seem to get swallowed
                 log.error("Throwable while listing resources %s, %s, %s".formatted(packType, nameSpace, path), t);

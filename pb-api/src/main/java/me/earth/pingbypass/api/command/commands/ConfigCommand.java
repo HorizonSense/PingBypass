@@ -40,7 +40,7 @@ public class ConfigCommand extends AbstractPbCommand {
             try {
                 action.acceptWithException(config);
             } catch (ConfigException e) {
-                print(Text.literal(e.getMessage()).withStyle(Formatting.RED));
+                print(Text.literal(e.getMessage()).formatted(Formatting.RED));
             }
         });
 
@@ -59,7 +59,7 @@ public class ConfigCommand extends AbstractPbCommand {
                     try {
                         action.acceptWithException(config, ctx.getArgument("name", String.class));
                     } catch (ConfigException e) {
-                        print(Text.literal(e.getMessage()).withStyle(Formatting.RED));
+                        print(Text.literal(e.getMessage()).formatted(Formatting.RED));
                     }
                 }));
 

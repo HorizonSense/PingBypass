@@ -6,7 +6,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 @Data
 public class CustomPayloadInitEvent {
     private final Class<? extends Packet<?>> type;
-    private final ResourceLocation location;
+    private final Identifier location;
     private final FriendlyByteBuf buf;
     private @Nullable CustomPacketPayload payload;
 

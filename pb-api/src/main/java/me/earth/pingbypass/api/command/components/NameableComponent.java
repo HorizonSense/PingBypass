@@ -43,7 +43,7 @@ public class NameableComponent<T extends Nameable & HasDescription> {
         Iterator<T> itr = nameables.iterator();
         while (itr.hasNext()) {
             T t = itr.next();
-            root.append(Text.literal(t.getName()).withStyle(style -> {
+            root.append(Text.literal(t.getName()).styled(style -> {
                 Style result = style
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(t.getDescription())))
                     .withColor(formatting.apply(t));
@@ -56,7 +56,7 @@ public class NameableComponent<T extends Nameable & HasDescription> {
             }));
 
             if (itr.hasNext()) {
-                root.append(Text.literal(", ").withStyle(Formatting.WHITE));
+                root.append(Text.literal(", ").formatted(Formatting.WHITE));
             }
         }
 

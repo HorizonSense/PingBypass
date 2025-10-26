@@ -4,7 +4,7 @@ package me.earth.pingbypass.api.event.network;
 import me.earth.pingbypass.api.event.SubscriberImpl;
 import me.earth.pingbypass.api.event.listeners.AbstractEventListener;
 import me.earth.pingbypass.api.event.listeners.generic.TypeHelper;
-import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.util.thread.BlockableEventLoop;
 
 import java.util.ArrayList;

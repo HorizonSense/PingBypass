@@ -3,11 +3,11 @@ package me.earth.pingbypass.api.event.loop;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.earth.pingbypass.api.event.event.CancellableEvent;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.network.ClientPlayerEntity;
 
 @Getter
 @RequiredArgsConstructor
 public class LocalPlayerUpdateEvent extends CancellableEvent {
-    private final LocalPlayer player;
+    private final ClientPlayerEntity player;
 
 }

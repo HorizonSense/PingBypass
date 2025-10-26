@@ -1,7 +1,7 @@
 package me.earth.pingbypass.api.ducks.network;
 
 import net.minecraft.network.ConnectionProtocol;
-import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 
 public interface IConnectionProtocol {

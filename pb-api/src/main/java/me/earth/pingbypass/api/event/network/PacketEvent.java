@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.earth.pingbypass.api.event.event.CancellableEvent;
 import me.earth.pingbypass.api.ducks.network.IConnection;
-import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.packet.Packet;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)

@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class PseudoLiteral implements ArgumentType<String> {
     private static final Dynamic2CommandExceptionType EXCEPTION = new Dynamic2CommandExceptionType(
-            (s,o) -> Component.literal("Unknown option %s. Available options: %s".formatted(s, o)));
+            (s,o) -> Text.literal("Unknown option %s. Available options: %s".formatted(s, o)));
 
     private final List<String> list;
     private final String examples;

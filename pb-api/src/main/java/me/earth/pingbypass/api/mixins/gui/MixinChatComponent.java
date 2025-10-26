@@ -4,6 +4,7 @@ import me.earth.pingbypass.api.ducks.network.IChatComponent;
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.MessageSignature;
+import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -22,9 +23,9 @@ public abstract class MixinChatComponent implements IChatComponent {
 
     @Override
     @Invoker("addMessage")
-    public abstract void invokeAddMessage(Text component, @Nullable MessageSignature signature);
+    public abstract void invokeAddMessage(Text component, @Nullable MessageSignatureData signature);
     @Override
-    public void deleteImmediately(@Nullable MessageSignature signature, boolean all) {
+    public void deleteImmediately(@Nullable MessageSignatureData signature, boolean all) {
         if (signature == null) {
             return;
         }

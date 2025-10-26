@@ -3,8 +3,7 @@ package me.earth.pingbypass.api.event.network;
 import lombok.NoArgsConstructor;
 import me.earth.pingbypass.api.event.api.EventListener;
 import me.earth.pingbypass.api.event.listeners.generic.GenericListener;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ServerGamePacketListener;
+import net.minecraft.network.packet.Packet;
 
 /**
  * @param <P> the type of packet processed by this listener, most likely for the {@link ServerGamePacketListener}, but not guaranteed.

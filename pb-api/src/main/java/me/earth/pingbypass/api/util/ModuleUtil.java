@@ -13,8 +13,8 @@ public class ModuleUtil {
         String message = willBeEnabled ? " enabled." : " disabled.";
         Formatting formatting = willBeEnabled ? Formatting.GREEN : Formatting.RED;
         chat.sendWithoutLogging(Text.literal("")
-                .append(Text.literal(module.getName()).withStyle(Formatting.BOLD))
-                .append(Text.literal(message).withStyle(formatting)), module.getName());
+                .append(Text.literal(module.getName()).formatted(Formatting.BOLD))
+                .append(Text.literal(message).formatted(formatting)), module.getName());
     }
 
 }

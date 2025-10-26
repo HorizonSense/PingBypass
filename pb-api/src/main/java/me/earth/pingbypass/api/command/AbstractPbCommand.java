@@ -43,7 +43,7 @@ public abstract class AbstractPbCommand extends AbstractCommand {
     }
 
     protected void error(String message) {
-        getChat().send(Text.literal(message).withStyle(Formatting.RED));
+        getChat().send(Text.literal(message).formatted(Formatting.RED));
     }
 
     protected void print(Text message, String identifier) {

@@ -23,16 +23,16 @@ public class ResetCommand extends AbstractPbCommand {
         DynamicDescriptionArgument.SavingArgumentType<Module> moduleArg = new DynamicDescriptionArgument.SavingArgumentType<>(new ModuleArgument(pingBypass.getModuleManager()));
         builder.then(arg("module", moduleArg).executes(ctx -> {
             Module module = ctx.getArgument("module", Module.class);
-            print(Text.literal("Resetting ").withStyle(Formatting.RED)
-                    .append(Text.literal(module.getName()).withStyle(Formatting.WHITE, Formatting.BOLD)));
+            print(Text.literal("Resetting ").formatted(Formatting.RED)
+                    .append(Text.literal(module.getName()).formatted(Formatting.WHITE, Formatting.BOLD)));
             module.stream().forEach(setting -> SettingUtil.setValueUnchecked(setting, setting.getDefaultValue()));
         }).then(arg("setting", new DynamicDescriptionArgument<>(moduleArg, "setting")).executes(ctx -> {
             Module module = ctx.getArgument("module", Module.class);
             Setting<?> setting = ctx.getArgument("setting", Setting.class);
-            print(Text.literal("Resetting ").withStyle(Formatting.RED)
-                    .append(Text.literal(module.getName()).withStyle(Formatting.WHITE, Formatting.BOLD))
-                    .append(Text.literal(" - ").withStyle(Formatting.GRAY))
-                    .append(Text.literal(setting.getName()).withStyle(Formatting.AQUA)));
+            print(Text.literal("Resetting ").formatted(Formatting.RED)
+                    .append(Text.literal(module.getName()).formatted(Formatting.WHITE, Formatting.BOLD))
+                    .append(Text.literal(" - ").formatted(Formatting.GRAY))
+                    .append(Text.literal(setting.getName()).formatted(Formatting.AQUA)));
             SettingUtil.setValueUnchecked(setting, setting.getDefaultValue());
         })));
     }

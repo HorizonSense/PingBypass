@@ -21,9 +21,9 @@ public class ToggleCommand extends AbstractPbCommand {
             Module module = ctx.getArgument("module", Module.class);
             module.toggle();
             print(Text.literal("Toggling ")
-                            .withStyle(module.isEnabled() ? Formatting.GREEN : Formatting.RED)
+                            .formatted(module.isEnabled() ? Formatting.GREEN : Formatting.RED)
                             .append(Text.literal(module.getName())
-                                    .withStyle(Formatting.WHITE, Formatting.BOLD)), module.getName());
+                                    .formatted(Formatting.WHITE, Formatting.BOLD)), module.getName());
         }));
     }
 

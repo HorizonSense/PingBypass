@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-import static net.minecraft.commands.SharedSuggestionProvider.matchesSubStr;
+import static net.minecraft.command.CommandSource.shouldSuggest;
 
 @RequiredArgsConstructor
 public class ContainerArgumentType<T extends Nameable> implements ArgumentType<Container<T>> {
@@ -76,7 +76,7 @@ public class ContainerArgumentType<T extends Nameable> implements ArgumentType<C
             }
             case DEL -> {
                 for (T nameable : setting.getValue()) {
-                    if (matchesSubStr(split[1], nameable.getNameLowerCase())) {
+                    if (shouldSuggest(split[1], nameable.getNameLowerCase())) {
                         builderForType.suggest(nameable.getName());
                     }
                 }

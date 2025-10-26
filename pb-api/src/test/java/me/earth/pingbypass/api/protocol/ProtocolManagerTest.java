@@ -11,7 +11,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Identifier;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,9 +33,9 @@ public class ProtocolManagerTest {
         packet.write(buf);
 
         ProtocolListener protocolListener = new ProtocolListener(protocolManager, PacketFlow.SERVERBOUND);
-        ResourceLocation resourceLocation = buf.readResourceLocation();
-        assertEquals(packet.getId(), resourceLocation);
-        CustomPayloadInitEvent payloadInitEvent = new CustomPayloadInitEvent(ServerboundCustomPayloadPacket.class, resourceLocation, buf);
+        Identifier identifier = buf.readResourceLocation();
+        assertEquals(packet.getId(), identifier);
+        CustomPayloadInitEvent payloadInitEvent = new CustomPayloadInitEvent(ServerboundCustomPayloadPacket.class, identifier, buf);
         protocolListener.onCustomPayloadInit(payloadInitEvent);
         assertNotNull(payloadInitEvent.getPayload());
 
@@ -60,8 +60,8 @@ public class ProtocolManagerTest {
         }
 
         @Override
-        public ResourceLocation getId() {
-            return new ResourceLocation("pingbypass", "test");
+        public Identifier getId() {
+            return new Identifier("pingbypass", "test");
         }
 
         @Override

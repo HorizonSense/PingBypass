@@ -39,16 +39,16 @@ public class ModuleCommand extends AbstractCommand implements PrintsInContextCha
 
         builder.executes((SuccessfulCommand<PBCommandSource>) ctx -> {
             print(ctx, ComponentUtil.getComponent(module, AQUA)
-                    .append(Text.literal(" - ").withStyle(GRAY))
-                    .append(Text.literal(module.getCategory().getName()).withStyle(WHITE)));
+                    .append(Text.literal(" - ").formatted(GRAY))
+                    .append(Text.literal(module.getCategory().getName()).formatted(WHITE)));
             module.stream().forEach(setting ->
                 print(ctx, ComponentUtil.getComponent(setting, WHITE)
-                    .append(Text.literal(" : ").withStyle(GRAY))
+                    .append(Text.literal(" : ").formatted(GRAY))
                         // TODO: see TODOS in ComponentUtil and SettingImpl
                     .append(setting.getValueComponent())));
         }).then(arg("setting", new SettingArgument(module)).executes(ctx -> {
             Setting<?> setting = ctx.getArgument("setting", Setting.class);
-            print(ctx, ComponentUtil.getComponent(setting, WHITE).append(Text.literal(": ").withStyle(GRAY).append(setting.getValueComponent())));
+            print(ctx, ComponentUtil.getComponent(setting, WHITE).append(Text.literal(": ").formatted(GRAY).append(setting.getValueComponent())));
         }).then(arg("value", StringArgumentType.greedyString()) // TODO: might regret greedyString for modules with custom commands?
             .suggests(SettingSuggestionProvider.of("setting", "value"))
             .executes(ctx -> {
@@ -59,7 +59,7 @@ public class ModuleCommand extends AbstractCommand implements PrintsInContextCha
                 print(ctx, ComponentUtil.getComponent(module, WHITE)
                         .append(" ")
                         .append(ComponentUtil.getComponent(setting, AQUA))
-                        .append(Text.literal(" set to ").withStyle(WHITE))
+                        .append(Text.literal(" set to ").formatted(WHITE))
                         .append(setting.getValueComponent()));
             })));
     }

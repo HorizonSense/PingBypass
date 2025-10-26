@@ -14,7 +14,7 @@ import net.minecraft.text.Text;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static net.minecraft.commands.SharedSuggestionProvider.matchesSubStr;
+import static net.minecraft.command.CommandSource.shouldSuggest;
 
 @RequiredArgsConstructor
 public class BindArgument implements ArgumentType<Bind> {
@@ -70,7 +70,7 @@ public class BindArgument implements ArgumentType<Bind> {
 
         SuggestionsBuilder builderForLastKey = new SuggestionsBuilder(builder.getInput(), builder.getInput().toLowerCase(), builder.getStart() + length);
         for (Key key : registry) {
-            if (matchesSubStr(split[split.length - 1], key.getNameLowerCase())) {
+            if (shouldSuggest(split[split.length - 1], key.getNameLowerCase())) {
                 builderForLastKey.suggest(key.getName());
             }
         }

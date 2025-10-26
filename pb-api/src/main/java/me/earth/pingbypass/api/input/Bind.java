@@ -62,14 +62,14 @@ public class Bind implements JsonSerializable, Streamable<Key> {
 
     public Text getComponent() {
         if (keys.isEmpty()) {
-            return Text.literal("NONE").withStyle(Formatting.GRAY);
+            return Text.literal("NONE").formatted(Formatting.GRAY);
         }
 
         MutableText component = Text.literal("");
         Iterator<Key> iterator = iterator();
         while (iterator.hasNext()) {
             Key key = iterator.next();
-            component.append(Text.literal(key.getName()).withStyle(Formatting.GRAY));
+            component.append(Text.literal(key.getName()).formatted(Formatting.GRAY));
             if (iterator.hasNext()) {
                 component.append(", ");
             }

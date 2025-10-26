@@ -5,7 +5,7 @@ import me.earth.pingbypass.api.traits.HasDescription;
 import me.earth.pingbypass.api.traits.Nameable;
 import net.minecraft.util.Formatting;
 import net.minecraft.text.Text;
-import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 
 @UtilityClass
@@ -13,7 +13,7 @@ public class ComponentUtil {
     public static <T extends Nameable & HasDescription> MutableText getComponent(T t, Formatting formatting) {
         return Text
                 .literal(t.getName())
-                .withStyle(style -> style
+                .styled(style -> style
                         .withColor(formatting)
                         .withHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT, Text.literal(t.getDescription()))));
@@ -34,7 +34,7 @@ public class ComponentUtil {
 
     public static Text getSimpleValueComponent(Object value) {
         return Text.literal(String.valueOf(value))
-                .withStyle(ComponentUtil.getColor(value));
+                .formatted(ComponentUtil.getColor(value));
     }
 
 }

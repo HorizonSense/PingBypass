@@ -4,11 +4,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public interface PBPacket extends Packet<PacketListener> {
-    ResourceLocation getId();
+    Identifier getId();
 
     void writePacket(FriendlyByteBuf buf);
 
@@ -24,7 +24,7 @@ public interface PBPacket extends Packet<PacketListener> {
         }
 
         @Override
-        public @NotNull ResourceLocation id() {
+        public @NotNull Identifier id() {
             return packet.getId();
         }
     }

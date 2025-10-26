@@ -19,7 +19,7 @@ public class CommandEventService extends SubscriberImpl {
                     try {
                         commandManager.execute(event.getMessage().substring(prefix.length()), source);
                     } catch (CommandSyntaxException e) {
-                        source.getMinecraft().gui.getChat().addMessage(Text.literal(e.getMessage()).withStyle(Formatting.RED));
+                        source.getMinecraft().gui.getChat().addMessage(Text.literal(e.getMessage()).formatted(Formatting.RED));
                     }
 
                     event.setCancelled(true);

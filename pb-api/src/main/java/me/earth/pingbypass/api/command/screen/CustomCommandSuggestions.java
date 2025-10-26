@@ -20,9 +20,9 @@ import me.earth.pingbypass.PingBypassApi;
 import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.command.ParseResultUtil;
 import me.earth.pingbypass.api.event.chat.CommandSuggestionEvent;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.Formatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -57,7 +57,7 @@ final class CustomCommandSuggestions {
     private static final List<Style> ARGUMENT_STYLES = Stream.of(AQUA, YELLOW, GREEN, LIGHT_PURPLE, GOLD)
                                                              .map(Style.EMPTY::withColor)
                                                              .collect(ImmutableList.toImmutableList());
-    private final Minecraft mc;
+    private final MinecraftClient mc;
     private final Screen screen;
     private final EditBox input;
     private final Font font;
@@ -79,7 +79,7 @@ final class CustomCommandSuggestions {
     private boolean allowSuggestions;
     boolean keepSuggestions;
 
-    public CustomCommandSuggestions(Minecraft mc, Screen screen, EditBox input, Font font, int lineStartOffset,
+    public CustomCommandSuggestions(MinecraftClient mc, Screen screen, EditBox input, Font font, int lineStartOffset,
                                     int suggestionLineLimit, boolean anchorToBottom, int fillColor,
                                     PingBypass pingBypass, PBCommandSource suggestionProvider) {
         this.mc = mc;

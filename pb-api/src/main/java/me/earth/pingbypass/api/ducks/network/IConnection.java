@@ -2,7 +2,7 @@ package me.earth.pingbypass.api.ducks.network;
 
 import me.earth.pingbypass.api.event.network.PacketEvent;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 
 /**

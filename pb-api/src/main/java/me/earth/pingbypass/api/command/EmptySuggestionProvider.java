@@ -3,14 +3,15 @@ package me.earth.pingbypass.api.command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.util.annotation.MethodsReturnNonnullByDefault;
 import net.minecraft.command.CommandSource;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.level.Level;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.Identifier;
+import net.minecraft.resource.featuretoggle.FeatureSet;
+import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -33,12 +34,12 @@ public interface EmptySuggestionProvider extends CommandSource {
     }
 
     @Override
-    default Stream<ResourceLocation> getAvailableSounds() {
+    default Stream<Identifier> getAvailableSounds() {
         return Stream.empty();
     }
 
     @Override
-    default Stream<ResourceLocation> getRecipeNames() {
+    default Stream<Identifier> getRecipeNames() {
         return Stream.empty();
     }
 
@@ -48,23 +49,23 @@ public interface EmptySuggestionProvider extends CommandSource {
     }
 
     @Override
-    default Set<ResourceKey<Level>> levels() {
+    default Set<RegistryKey<World>> levels() {
         return Collections.emptySet();
     }
 
     @Override
-    default RegistryAccess registryAccess() {
-        return RegistryAccess.EMPTY;
+    default DynamicRegistryManager dynamicRegistryManager() {
+        return DynamicRegistryManager.EMPTY;
     }
 
     @Override
-    default FeatureFlagSet enabledFeatures() {
-        return FeatureFlagSet.of();
+    default FeatureSet enabledFeatures() {
+        return FeatureSet.of();
     }
 
     @Override
-    default CompletableFuture<Suggestions> suggestRegistryElements(ResourceKey<? extends Registry<?>> arg,
-                                                                  ElementSuggestionType arg2,
+    default CompletableFuture<Suggestions> suggestRegistryElements(RegistryKey<? extends Registry<?>> arg,
+                                                                   CommandRegistryAccess arg2,
                                                                   SuggestionsBuilder suggestionsBuilder,
                                                                   CommandContext<?> commandContext) {
         return Suggestions.empty();

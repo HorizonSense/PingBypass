@@ -7,6 +7,7 @@ import me.earth.pingbypass.api.command.CommandManager;
 import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.command.DelegatingPBCommandSource;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.components.EditBox;
@@ -40,7 +41,7 @@ public class CommandScreen extends Screen {
     private final PBCommandSource suggestionProvider;
     private final ChatComponent chatComponent;
     private final PingBypass pingBypass;
-    private final Minecraft minecraft;
+    private final MinecraftClient minecraft;
     private final Screen background;
     private CustomCommandSuggestions commandSuggestions;
     private String historyBuffer = "";

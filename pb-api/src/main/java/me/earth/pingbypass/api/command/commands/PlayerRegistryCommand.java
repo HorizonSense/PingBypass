@@ -56,20 +56,20 @@ public class PlayerRegistryCommand extends AbstractCommand implements UsesExtend
                     PlayerInfo playerInfo = new PlayerInfo(name, uuid);
                     registry.register(playerInfo);
                     ctx.getSource().getChat().send(
-                            Text.literal("Added ").withStyle(Formatting.GREEN)
+                            Text.literal("Added ").formatted(Formatting.GREEN)
                                     .append(ComponentUtil.getComponent(playerInfo, Formatting.AQUA))
-                                    .append(Text.literal(" as ").withStyle(Formatting.GREEN))
-                                    .append(Text.literal(as + ".").withStyle(Formatting.GREEN)));
+                                    .append(Text.literal(" as ").formatted(Formatting.GREEN))
+                                    .append(Text.literal(as + ".").formatted(Formatting.GREEN)));
                 })).exceptionally(log(ctx));
         }))).then(literal("del").then(arg("player", new NameableArgumentTypeImpl<>(registry, "player"))
             .executes(ctx -> {
                 PlayerInfo playerInfo = ctx.getArgument("player", PlayerInfo.class);
                 registry.unregister(playerInfo);
                 ctx.getSource().getChat().send(
-                        Text.literal("Un").withStyle(Formatting.RED)
-                                .append(Text.literal(verb + " ").withStyle(Formatting.RED))
+                        Text.literal("Un").formatted(Formatting.RED)
+                                .append(Text.literal(verb + " ").formatted(Formatting.RED))
                                 .append(ComponentUtil.getComponent(playerInfo, Formatting.AQUA))
-                                .append(Text.literal(".").withStyle(Formatting.RED)));
+                                .append(Text.literal(".").formatted(Formatting.RED)));
         }))).then(literal("refresh").executes(ctx -> {
             ctx.getSource().getChat().send(
                     Text.literal("Checking the server for players that have changed their name recently."));
@@ -82,20 +82,20 @@ public class PlayerRegistryCommand extends AbstractCommand implements UsesExtend
                         registry.register(newInfo);
                         ctx.getSource().getChat().send(Text.literal("Player ")
                                 .append(ComponentUtil.getComponent(newInfo, AQUA))
-                                .append(Text.literal(" used to be named ").withStyle(WHITE))
+                                .append(Text.literal(" used to be named ").formatted(WHITE))
                                 .append(ComponentUtil.getComponent(playerInfo.get(), AQUA))
-                                .append(Text.literal(".").withStyle(WHITE)));
+                                .append(Text.literal(".").formatted(WHITE)));
                     }
                 }
             }
         })).then(literal("list").executes(ctx -> {
-            var component = Text.literal(list).append(Text.literal(": ").withStyle(GRAY));
+            var component = Text.literal(list).append(Text.literal(": ").formatted(GRAY));
             Iterator<PlayerInfo> itr = registry.iterator();
             while (itr.hasNext()) {
                 PlayerInfo playerInfo = itr.next();
                 component.append(ComponentUtil.getComponent(playerInfo, AQUA));
                 if (itr.hasNext()) {
-                    component.append(Text.literal(", ").withStyle(GRAY));
+                    component.append(Text.literal(", ").formatted(GRAY));
                 }
             }
 
@@ -106,7 +106,7 @@ public class PlayerRegistryCommand extends AbstractCommand implements UsesExtend
     private Function<Throwable, Void> log(CommandContext<PBCommandSource> ctx) {
         return t -> {
             ctx.getSource().getMinecraft().submit(() ->
-                ctx.getSource().getChat().send(Text.literal(t.getMessage()).withStyle(ChatFormatting.RED)));
+                ctx.getSource().getChat().send(Text.literal(t.getMessage()).formatted(ChatFormatting.RED)));
             return null;
         };
     }
