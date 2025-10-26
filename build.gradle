@@ -1,0 +1,96 @@
+// -----------------------------------------------------------------------
+// 1️⃣ BUILDSCRIPT — ép ASM 9.7 trước khi plugin Fabric Loom load
+// -----------------------------------------------------------------------
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = "https://maven.fabricmc.net/" }
+    }
+    dependencies {
+        classpath 'org.ow2.asm:asm:9.7'
+        classpath 'org.ow2.asm:asm-tree:9.7'
+        classpath 'org.ow2.asm:asm-util:9.7'
+        classpath 'org.ow2.asm:asm-analysis:9.7'
+        classpath 'org.ow2.asm:asm-commons:9.7'
+    }
+}
+
+// -----------------------------------------------------------------------
+// 2️⃣ PLUGINS BLOCK — chỉ khai báo version, KHÔNG apply ở root
+// -----------------------------------------------------------------------
+plugins {
+    id 'io.franzbecker.gradle-lombok' version '5.0.0' apply false
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+    id 'architectury-plugin' version '3.4.162' apply false
+    id 'fabric-loom' version '1.6.12' apply false
+    id 'java'
+}
+
+// -----------------------------------------------------------------------
+// 3️⃣ ROOT PROJECT CONFIG — KHÔNG apply fabric-loom tại root!
+// -----------------------------------------------------------------------
+group = 'me.earth.pingbypass'
+version = '1.0.0'
+
+// ép version ASM cho mọi project
+configurations.all {
+    resolutionStrategy {
+        force 'org.ow2.asm:asm:9.7'
+        force 'org.ow2.asm:asm-tree:9.7'
+        force 'org.ow2.asm:asm-commons:9.7'
+        force 'org.ow2.asm:asm-util:9.7'
+        force 'org.ow2.asm:asm-analysis:9.7'
+    }
+}
+
+// repository dùng chung
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url = "https://maven.fabricmc.net/" }
+        maven { url = "https://maven.architectury.dev/" }
+        maven { url = "https://repo.spongepowered.org/maven" }
+    }
+}
+
+// -----------------------------------------------------------------------
+// 4️⃣ SUBPROJECT CONFIG — chỉ pb-api dùng fabric-loom
+// -----------------------------------------------------------------------
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'architectury-plugin'
+    apply plugin: 'idea'
+
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.compilerArgs.removeAll { it.startsWith('--release') }
+        options.compilerArgs << '-proc:none'
+    }
+
+    // Chỉ apply fabric-loom cho pb-api
+    if (project.name == "pb-api") {
+        apply plugin: 'fabric-loom'
+
+        dependencies {
+            minecraft "com.mojang:minecraft:1.21.1"
+            mappings "net.fabricmc:yarn:1.21.1+build.3:v2"
+            modImplementation "net.fabricmc:fabric-loader:0.16.9"
+        }
+
+        architectury {
+            minecraft = "1.21.1"
+        }
+    }
+
+    // Chỉ apply Lombok cho subproject khác (nếu có)
+    if (project.name != "pb-api") {
+        apply plugin: 'io.franzbecker.gradle-lombok'
+    }
+}
