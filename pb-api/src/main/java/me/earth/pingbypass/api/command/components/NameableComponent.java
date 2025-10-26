@@ -3,8 +3,10 @@ package me.earth.pingbypass.api.command.components;
 import lombok.RequiredArgsConstructor;
 import me.earth.pingbypass.api.traits.HasDescription;
 import me.earth.pingbypass.api.traits.Nameable;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.*;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.Formatting;
+import net.minecraft.text.*;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -13,11 +15,11 @@ import java.util.function.Function;
 @RequiredArgsConstructor(staticName = "builder")
 public class NameableComponent<T extends Nameable & HasDescription> {
     private final Iterable<T> nameables;
-    private Function<T, ChatFormatting> formatting = t -> ChatFormatting.AQUA;
+    private Function<T, Formatting> formatting = t -> Formatting.AQUA;
     private Function<T, @Nullable ClickEvent> clickEvent = t -> null;
     private String name;
 
-    public NameableComponent<T> withFormatting(Function<T, ChatFormatting> formatting) {
+    public NameableComponent<T> withFormatting(Function<T, Formatting> formatting) {
         this.formatting = formatting;
         return this;
     }
@@ -36,14 +38,14 @@ public class NameableComponent<T extends Nameable & HasDescription> {
         return this;
     }
 
-    public Component build() {
-        MutableComponent root = Component.literal(name == null ? "" : (name + ": "));
+    public Text build() {
+        MutableText root = Text.literal(name == null ? "" : (name + ": "));
         Iterator<T> itr = nameables.iterator();
         while (itr.hasNext()) {
             T t = itr.next();
-            root.append(Component.literal(t.getName()).withStyle(style -> {
+            root.append(Text.literal(t.getName()).withStyle(style -> {
                 Style result = style
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(t.getDescription())))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(t.getDescription())))
                     .withColor(formatting.apply(t));
                 ClickEvent event = clickEvent.apply(t);
                 if (event != null) {
@@ -54,7 +56,7 @@ public class NameableComponent<T extends Nameable & HasDescription> {
             }));
 
             if (itr.hasNext()) {
-                root.append(Component.literal(", ").withStyle(ChatFormatting.WHITE));
+                root.append(Text.literal(", ").withStyle(Formatting.WHITE));
             }
         }
 

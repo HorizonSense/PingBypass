@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.earth.pingbypass.PingBypass;
 import me.earth.pingbypass.api.command.CommandManager;
+import me.earth.pingbypass.api.command.DelegatingPBCommandSource;
 import me.earth.pingbypass.api.command.impl.module.ModuleCommand;
 import me.earth.pingbypass.api.config.ConfigException;
 import me.earth.pingbypass.api.config.ConfigManager;
@@ -18,7 +19,6 @@ import me.earth.pingbypass.api.event.listeners.generic.SubscriberListener;
 import me.earth.pingbypass.api.files.FileManager;
 import me.earth.pingbypass.api.module.Module;
 import me.earth.pingbypass.api.command.CommandEventService;
-import me.earth.pingbypass.api.command.DelegatingCommandSource;
 import me.earth.pingbypass.api.command.commands.CommonCommandInitializer;
 import me.earth.pingbypass.api.event.ShutdownEvent;
 import me.earth.pingbypass.api.gui.TitleScreenService;
@@ -69,7 +69,7 @@ public class InitializationService implements CommonCommandInitializer, CommonMo
     public void registerServices() {
         EventBus bus = pingBypass.getEventBus();
         CommandManager commandManager = pingBypass.getCommandManager();
-        bus.subscribe(new CommandEventService(commandManager, new DelegatingCommandSource(mc, pingBypass)));
+        bus.subscribe(new CommandEventService(commandManager, new DelegatingPBCommandSource(mc, pingBypass)));
         bus.subscribe(TitleScreenService.create(pingBypass));
     }
 

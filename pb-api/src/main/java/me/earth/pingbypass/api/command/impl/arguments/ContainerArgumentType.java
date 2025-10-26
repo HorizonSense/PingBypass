@@ -13,8 +13,8 @@ import me.earth.pingbypass.api.setting.Setting;
 import me.earth.pingbypass.api.setting.impl.types.container.Container;
 import me.earth.pingbypass.api.setting.impl.types.container.ContainerAction;
 import me.earth.pingbypass.api.traits.Nameable;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.chat.Component;
+import net.minecraft.command.CommandSource;
+import net.minecraft.text.Text;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,7 +25,7 @@ import static net.minecraft.commands.SharedSuggestionProvider.matchesSubStr;
 @RequiredArgsConstructor
 public class ContainerArgumentType<T extends Nameable> implements ArgumentType<Container<T>> {
     private static final DynamicCommandExceptionType INVALID_ACTION = new DynamicCommandExceptionType(
-            (action) -> Component.literal("Invalid action: %s expected one of add, del or clear.".formatted(action)));
+            (action) -> Text.literal("Invalid action: %s expected one of add, del or clear.".formatted(action)));
 
     private final JsonSerializationFunction<T> serializer;
     private final ArgumentType<T> typeParser;
@@ -53,7 +53,7 @@ public class ContainerArgumentType<T extends Nameable> implements ArgumentType<C
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         String[] split = builder.getRemainingLowerCase().split(" ", 2);
         if (split.length == 1) {
-            return SharedSuggestionProvider.suggest(Arrays.stream(ContainerAction.values()).map(Nameable::getName), builder);
+            return CommandSource.suggestMatching(Arrays.stream(ContainerAction.values()).map(Nameable::getName), builder);
         } else if (split.length >= 2) {
             ContainerAction action = ContainerAction.ADD;
             try {

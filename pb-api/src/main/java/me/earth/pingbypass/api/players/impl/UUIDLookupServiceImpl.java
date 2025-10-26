@@ -2,8 +2,8 @@ package me.earth.pingbypass.api.players.impl;
 
 import lombok.RequiredArgsConstructor;
 import me.earth.pingbypass.api.players.UUIDLookupService;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 
 import java.util.ConcurrentModificationException;
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UUIDLookupServiceImpl implements UUIDLookupService {
     private final Map<String, UUID> cache = new ConcurrentHashMap<>();
     private final MojangApiService apiService;
-    private final Minecraft mc;
+    private final MinecraftClient mc;
 
     @Override
     public CompletableFuture<UUID> getUuid(String name) {
@@ -25,7 +25,7 @@ public class UUIDLookupServiceImpl implements UUIDLookupService {
             return CompletableFuture.completedFuture(result);
         }
 
-        ClientPacketListener connection = mc.getConnection();
+        ClientPlayNetworkHandler connection = mc.getConnection();
         if (connection != null) {
             try {
                 result = connection.getOnlinePlayers()

@@ -6,10 +6,10 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import me.earth.pingbypass.api.command.CommandSource;
+import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.event.event.CancellableEvent;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.command.CommandSource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -23,8 +23,8 @@ public class CommandSuggestionEvent extends CancellableEvent {
     private final EditBox input;
     private final Object suggestions;
     private @Nullable CompletableFuture<Suggestions> pendingSuggestions;
-    private @Nullable ParseResults<SharedSuggestionProvider> currentParse;
-    private @Nullable ParseResults<CommandSource> customParse;
+    private @Nullable ParseResults<CommandSource> currentParse;
+    private @Nullable ParseResults<PBCommandSource> customParse;
     private boolean updatingPendingSuggestions;
 
 }

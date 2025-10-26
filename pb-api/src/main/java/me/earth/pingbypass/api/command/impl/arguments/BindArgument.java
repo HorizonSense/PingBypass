@@ -9,7 +9,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import lombok.RequiredArgsConstructor;
 import me.earth.pingbypass.api.input.*;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -19,7 +19,7 @@ import static net.minecraft.commands.SharedSuggestionProvider.matchesSubStr;
 @RequiredArgsConstructor
 public class BindArgument implements ArgumentType<Bind> {
     private static final DynamicCommandExceptionType INVALID_KEY = new DynamicCommandExceptionType(
-            (name) -> Component.literal("Could not find key: " + name));
+            (name) -> Text.literal("Could not find key: " + name));
 
     private final Collection<String> examples;
     private final KeyboardAndMouse registry;

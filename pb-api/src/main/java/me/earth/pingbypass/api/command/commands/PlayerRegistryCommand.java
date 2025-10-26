@@ -2,7 +2,7 @@ package me.earth.pingbypass.api.command.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import me.earth.pingbypass.api.command.CommandSource;
+import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.command.impl.AbstractCommand;
 import me.earth.pingbypass.api.command.impl.UsesExtendedBuilders;
 import me.earth.pingbypass.api.command.impl.arguments.NameableArgumentTypeImpl;
@@ -13,18 +13,18 @@ import me.earth.pingbypass.api.players.PlayerRegistry;
 import me.earth.pingbypass.api.players.UUIDLookupService;
 import me.earth.pingbypass.api.players.impl.MojangApiService;
 import me.earth.pingbypass.api.players.impl.UUIDLookupServiceImpl;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.chat.Component;
+import net.minecraft.util.Formatting;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.command.CommandSource;
+import net.minecraft.text.Text;
 
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 
-import static net.minecraft.ChatFormatting.*;
+import static net.minecraft.util.Formatting.*;
 
 public class PlayerRegistryCommand extends AbstractCommand implements UsesExtendedBuilders {
     private final UUIDLookupService lookupService;
@@ -33,7 +33,7 @@ public class PlayerRegistryCommand extends AbstractCommand implements UsesExtend
     private final String as;
     private final String list;
 
-    public PlayerRegistryCommand(String name, Minecraft mc, PlayerRegistry playerRegistry, String verb, String as,
+    public PlayerRegistryCommand(String name, MinecraftClient mc, PlayerRegistry playerRegistry, String verb, String as,
                                  String list) {
         super(name, "(un)%s players.".formatted(name));
         // TODO: make UUIDLookupService part of the API?
@@ -46,7 +46,7 @@ public class PlayerRegistryCommand extends AbstractCommand implements UsesExtend
     }
 
     @Override
-    public void build(LiteralArgumentBuilder<CommandSource> builder) {
+    public void build(LiteralArgumentBuilder<PBCommandSource> builder) {
         builder.then(literal("add").then(arg("player", StringArgument.word("player"))
             .suggests((ctx, suggestionsBuilder) ->
                     SharedSuggestionProvider.suggest(ctx.getSource().getOnlinePlayerNames(), suggestionsBuilder))
@@ -56,46 +56,46 @@ public class PlayerRegistryCommand extends AbstractCommand implements UsesExtend
                     PlayerInfo playerInfo = new PlayerInfo(name, uuid);
                     registry.register(playerInfo);
                     ctx.getSource().getChat().send(
-                            Component.literal("Added ").withStyle(ChatFormatting.GREEN)
-                                    .append(ComponentUtil.getComponent(playerInfo, ChatFormatting.AQUA))
-                                    .append(Component.literal(" as ").withStyle(ChatFormatting.GREEN))
-                                    .append(Component.literal(as + ".").withStyle(ChatFormatting.GREEN)));
+                            Text.literal("Added ").withStyle(Formatting.GREEN)
+                                    .append(ComponentUtil.getComponent(playerInfo, Formatting.AQUA))
+                                    .append(Text.literal(" as ").withStyle(Formatting.GREEN))
+                                    .append(Text.literal(as + ".").withStyle(Formatting.GREEN)));
                 })).exceptionally(log(ctx));
         }))).then(literal("del").then(arg("player", new NameableArgumentTypeImpl<>(registry, "player"))
             .executes(ctx -> {
                 PlayerInfo playerInfo = ctx.getArgument("player", PlayerInfo.class);
                 registry.unregister(playerInfo);
                 ctx.getSource().getChat().send(
-                        Component.literal("Un").withStyle(ChatFormatting.RED)
-                                .append(Component.literal(verb + " ").withStyle(ChatFormatting.RED))
-                                .append(ComponentUtil.getComponent(playerInfo, ChatFormatting.AQUA))
-                                .append(Component.literal(".").withStyle(ChatFormatting.RED)));
+                        Text.literal("Un").withStyle(Formatting.RED)
+                                .append(Text.literal(verb + " ").withStyle(Formatting.RED))
+                                .append(ComponentUtil.getComponent(playerInfo, Formatting.AQUA))
+                                .append(Text.literal(".").withStyle(Formatting.RED)));
         }))).then(literal("refresh").executes(ctx -> {
             ctx.getSource().getChat().send(
-                    Component.literal("Checking the server for players that have changed their name recently."));
-            ClientPacketListener connection = ctx.getSource().getMinecraft().getConnection();
+                    Text.literal("Checking the server for players that have changed their name recently."));
+            ClientPlayNetworkHandler connection = ctx.getSource().getMinecraft().getConnection();
             if (connection != null) {
                 for (net.minecraft.client.multiplayer.PlayerInfo info : connection.getOnlinePlayers()) {
                     Optional<PlayerInfo> playerInfo = registry.getByUUID(info.getProfile().getId());
                     if (playerInfo.isPresent() && !playerInfo.get().name().equals(info.getProfile().getName())) {
                         PlayerInfo newInfo = new PlayerInfo(info.getProfile().getName(), info.getProfile().getId());
                         registry.register(newInfo);
-                        ctx.getSource().getChat().send(Component.literal("Player ")
+                        ctx.getSource().getChat().send(Text.literal("Player ")
                                 .append(ComponentUtil.getComponent(newInfo, AQUA))
-                                .append(Component.literal(" used to be named ").withStyle(WHITE))
+                                .append(Text.literal(" used to be named ").withStyle(WHITE))
                                 .append(ComponentUtil.getComponent(playerInfo.get(), AQUA))
-                                .append(Component.literal(".").withStyle(WHITE)));
+                                .append(Text.literal(".").withStyle(WHITE)));
                     }
                 }
             }
         })).then(literal("list").executes(ctx -> {
-            var component = Component.literal(list).append(Component.literal(": ").withStyle(GRAY));
+            var component = Text.literal(list).append(Text.literal(": ").withStyle(GRAY));
             Iterator<PlayerInfo> itr = registry.iterator();
             while (itr.hasNext()) {
                 PlayerInfo playerInfo = itr.next();
                 component.append(ComponentUtil.getComponent(playerInfo, AQUA));
                 if (itr.hasNext()) {
-                    component.append(Component.literal(", ").withStyle(GRAY));
+                    component.append(Text.literal(", ").withStyle(GRAY));
                 }
             }
 
@@ -103,10 +103,10 @@ public class PlayerRegistryCommand extends AbstractCommand implements UsesExtend
         }));
     }
 
-    private Function<Throwable, Void> log(CommandContext<CommandSource> ctx) {
+    private Function<Throwable, Void> log(CommandContext<PBCommandSource> ctx) {
         return t -> {
             ctx.getSource().getMinecraft().submit(() ->
-                ctx.getSource().getChat().send(Component.literal(t.getMessage()).withStyle(ChatFormatting.RED)));
+                ctx.getSource().getChat().send(Text.literal(t.getMessage()).withStyle(ChatFormatting.RED)));
             return null;
         };
     }

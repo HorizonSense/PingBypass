@@ -6,7 +6,7 @@ import me.earth.pingbypass.api.config.Configurable;
 import me.earth.pingbypass.api.traits.CanBeVisible;
 import me.earth.pingbypass.api.traits.HasDescription;
 import me.earth.pingbypass.api.traits.Nameable;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 
 public interface Setting<T> extends HoldsValue<T>, Configurable, Nameable,
         HasDescription, CanBeVisible, PreAndPostObservable<SettingObserver<T>> {
@@ -18,7 +18,7 @@ public interface Setting<T> extends HoldsValue<T>, Configurable, Nameable,
 
     ConfigType getConfigType();
 
-    Component getValueComponent();
+    Text getValueComponent();
 
     @SuppressWarnings("unchecked")
     default Class<T> getType() {

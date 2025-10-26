@@ -24,11 +24,11 @@ public class CommandManagerTest {
         manager.register(value2Command);
         assertFalse(value1.get());
         assertFalse(value2.get());
-        manager.execute("value1", DummyCommandSource.INSTANCE);
+        manager.execute("value1", DummyPBCommandSource.INSTANCE);
         assertTrue(value1.get());
         assertFalse(value2.get());
         value1.set(false);
-        manager.execute("value2", DummyCommandSource.INSTANCE);
+        manager.execute("value2", DummyPBCommandSource.INSTANCE);
         assertFalse(value1.get());
         assertTrue(value2.get());
 
@@ -37,7 +37,7 @@ public class CommandManagerTest {
 
         assertTrue(manager.unregister(value1Command));
         assertTrue(manager.stream().noneMatch(value1Command::equals));
-        assertThrows(CommandSyntaxException.class, () -> manager.execute("value1", DummyCommandSource.INSTANCE));
+        assertThrows(CommandSyntaxException.class, () -> manager.execute("value1", DummyPBCommandSource.INSTANCE));
 
         // TODO: test command exceptions etc.
     }
@@ -50,7 +50,7 @@ public class CommandManagerTest {
         private final String name;
 
         @Override
-        public void build(LiteralArgumentBuilder<CommandSource> builder) {
+        public void build(LiteralArgumentBuilder<PBCommandSource> builder) {
             builder.executes(ctx -> {
                 value.set(true);
                 return com.mojang.brigadier.Command.SINGLE_SUCCESS;

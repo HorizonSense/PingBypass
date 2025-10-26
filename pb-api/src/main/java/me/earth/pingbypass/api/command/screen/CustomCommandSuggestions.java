@@ -17,10 +17,11 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.earth.pingbypass.PingBypass;
 import me.earth.pingbypass.PingBypassApi;
-import me.earth.pingbypass.api.command.CommandSource;
+import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.command.ParseResultUtil;
 import me.earth.pingbypass.api.event.chat.CommandSuggestionEvent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.command.CommandSource;
+import net.minecraft.util.Formatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -28,7 +29,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -45,15 +45,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static net.minecraft.ChatFormatting.*;
+import static net.minecraft.util.Formatting.*;
 
 /**
  * A custom {@link net.minecraft.client.gui.components.CommandSuggestions}.
  */
 final class CustomCommandSuggestions {
     private static final Pattern WHITESPACE_PATTERN = Pattern.compile("(\\s+)");
-    private static final Style UNPARSED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
-    private static final Style LITERAL_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
+    private static final Style UNPARSED_STYLE = Style.EMPTY.withColor(Formatting.RED);
+    private static final Style LITERAL_STYLE = Style.EMPTY.withColor(Formatting.GRAY);
     private static final List<Style> ARGUMENT_STYLES = Stream.of(AQUA, YELLOW, GREEN, LIGHT_PURPLE, GOLD)
                                                              .map(Style.EMPTY::withColor)
                                                              .collect(ImmutableList.toImmutableList());
@@ -69,19 +69,19 @@ final class CustomCommandSuggestions {
     private int commandUsagePosition;
     private int commandUsageWidth;
     @Nullable
-    private ParseResults<CommandSource> currentParse;
+    private ParseResults<PBCommandSource> currentParse;
     @Nullable
     private CompletableFuture<Suggestions> pendingSuggestions;
     @Nullable
     private CustomCommandSuggestions.SuggestionsList suggestions;
     private final PingBypass pingBypass;
-    private final CommandSource suggestionProvider;
+    private final PBCommandSource suggestionProvider;
     private boolean allowSuggestions;
     boolean keepSuggestions;
 
     public CustomCommandSuggestions(Minecraft mc, Screen screen, EditBox input, Font font, int lineStartOffset,
                                     int suggestionLineLimit, boolean anchorToBottom, int fillColor,
-                                    PingBypass pingBypass, CommandSource suggestionProvider) {
+                                    PingBypass pingBypass, PBCommandSource suggestionProvider) {
         this.mc = mc;
         this.screen = screen;
         this.input = input;
@@ -195,7 +195,7 @@ final class CustomCommandSuggestions {
         String sub = string.substring(0, this.input.getCursorPosition());
         int lastWord = getLastWordIndex(sub);
         Collection<String> tabs = suggestionProvider.getCustomTabSugggestions();
-        this.pendingSuggestions = SharedSuggestionProvider.suggest(tabs, new SuggestionsBuilder(sub, lastWord));
+        this.pendingSuggestions = CommandSource.suggestMatching(tabs, new SuggestionsBuilder(sub, lastWord));
     }
 
     private static int getLastWordIndex(String string) {
@@ -230,7 +230,7 @@ final class CustomCommandSuggestions {
             if (this.pendingSuggestions.join().isEmpty() && !this.currentParse.getExceptions().isEmpty()) {
                 int i = 0;
 
-                for(Entry<CommandNode<CommandSource>, CommandSyntaxException> entry : this.currentParse.getExceptions().entrySet()) {
+                for(Entry<CommandNode<PBCommandSource>, CommandSyntaxException> entry : this.currentParse.getExceptions().entrySet()) {
                     CommandSyntaxException commandSyntaxException = entry.getValue();
                     if (commandSyntaxException.getType() == CommandSyntaxException.BUILT_IN_EXCEPTIONS.literalIncorrect()) {
                         ++i;
@@ -262,14 +262,14 @@ final class CustomCommandSuggestions {
 
     private void fillNodeUsage() {
         assert this.currentParse != null;
-        CommandContextBuilder<CommandSource> commandContextBuilder = this.currentParse.getContext();
-        SuggestionContext<CommandSource> suggestionContext = commandContextBuilder.findSuggestionContext(this.input.getCursorPosition());
-        Map<CommandNode<CommandSource>, String> map = pingBypass.getCommandManager().getSmartUsage(suggestionContext.parent, suggestionProvider);
+        CommandContextBuilder<PBCommandSource> commandContextBuilder = this.currentParse.getContext();
+        SuggestionContext<PBCommandSource> suggestionContext = commandContextBuilder.findSuggestionContext(this.input.getCursorPosition());
+        Map<CommandNode<PBCommandSource>, String> map = pingBypass.getCommandManager().getSmartUsage(suggestionContext.parent, suggestionProvider);
 
         List<FormattedCharSequence> list = Lists.newArrayList();
         int i = 0;
-        Style lv = Style.EMPTY.withColor(ChatFormatting.GRAY);
-        for(Entry<CommandNode<CommandSource>, String> entry : map.entrySet()) {
+        Style lv = Style.EMPTY.withColor(Formatting.GRAY);
+        for(Entry<CommandNode<PBCommandSource>, String> entry : map.entrySet()) {
             if (!(entry.getKey() instanceof LiteralCommandNode)) {
                 list.add(FormattedCharSequence.forward(entry.getValue(), lv));
                 i = Math.max(i, this.font.width(entry.getValue()));
@@ -292,13 +292,13 @@ final class CustomCommandSuggestions {
         return string2.startsWith(string) ? string2.substring(string.length()) : null;
     }
 
-    private static FormattedCharSequence formatText(ParseResults<CommandSource> parseResults, String string, int i) {
+    private static FormattedCharSequence formatText(ParseResults<PBCommandSource> parseResults, String string, int i) {
         List<FormattedCharSequence> list = Lists.newArrayList();
         int j = 0;
         int k = -1;
-        CommandContextBuilder<CommandSource> commandContextBuilder = parseResults.getContext().getLastChild();
+        CommandContextBuilder<PBCommandSource> commandContextBuilder = parseResults.getContext().getLastChild();
 
-        for(ParsedArgument<CommandSource, ?> parsedArgument : commandContextBuilder.getArguments().values()) {
+        for(ParsedArgument<PBCommandSource, ?> parsedArgument : commandContextBuilder.getArguments().values()) {
             if (++k >= ARGUMENT_STYLES.size()) {
                 k = 0;
             }

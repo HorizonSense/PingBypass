@@ -2,10 +2,10 @@ package me.earth.pingbypass.api.command.commands;
 
 import me.earth.pingbypass.PingBypass;
 import me.earth.pingbypass.api.command.CommandManager;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 
 public interface CommonCommandInitializer {
-    default void registerCommonCommands(PingBypass pb, Minecraft mc) {
+    default void registerCommonCommands(PingBypass pb, MinecraftClient mc) {
         CommandManager manager = pb.getCommandManager();
         manager.register(new ConfigCommand(pb, mc));
         manager.register(new CopyCommand(pb, mc));

@@ -7,8 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.chat.Component;
+import net.minecraft.command.CommandSource;
+import net.minecraft.text.Text;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class EnumArgument<T extends Enum<T>> implements ArgumentType<T> {
     private static final Dynamic2CommandExceptionType INVALID_ENUM = new Dynamic2CommandExceptionType(
-        (found, constants) -> Component.literal(
+        (found, constants) -> Text.literal(
                 "Could not find %s in %s".formatted(found, Arrays.toString((Object[]) constants))));
 
     private final Collection<String> examples;
@@ -39,7 +39,7 @@ public class EnumArgument<T extends Enum<T>> implements ArgumentType<T> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(Arrays.stream(type.getEnumConstants()).map(Enum::name), builder);
+        return CommandSource.suggestMatching(Arrays.stream(type.getEnumConstants()).map(Enum::name), builder);
     }
 
     @Override

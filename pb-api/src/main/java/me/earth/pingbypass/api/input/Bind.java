@@ -5,9 +5,9 @@ import com.google.gson.JsonElement;
 import lombok.Data;
 import me.earth.pingbypass.api.config.JsonSerializable;
 import me.earth.pingbypass.api.traits.Streamable;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Formatting;
+import net.minecraft.text.Text;
+import net.minecraft.text.MutableText;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -60,16 +60,16 @@ public class Bind implements JsonSerializable, Streamable<Key> {
         return keys.iterator();
     }
 
-    public Component getComponent() {
+    public Text getComponent() {
         if (keys.isEmpty()) {
-            return Component.literal("NONE").withStyle(ChatFormatting.GRAY);
+            return Text.literal("NONE").withStyle(Formatting.GRAY);
         }
 
-        MutableComponent component = Component.literal("");
+        MutableText component = Text.literal("");
         Iterator<Key> iterator = iterator();
         while (iterator.hasNext()) {
             Key key = iterator.next();
-            component.append(Component.literal(key.getName()).withStyle(ChatFormatting.GRAY));
+            component.append(Text.literal(key.getName()).withStyle(Formatting.GRAY));
             if (iterator.hasNext()) {
                 component.append(", ");
             }

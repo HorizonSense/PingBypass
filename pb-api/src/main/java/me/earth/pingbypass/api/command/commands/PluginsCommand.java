@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.earth.pingbypass.PingBypass;
 import me.earth.pingbypass.api.command.AbstractPbCommand;
-import me.earth.pingbypass.api.command.CommandSource;
+import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.command.components.NameableComponent;
 
 public class PluginsCommand extends AbstractPbCommand {
@@ -13,7 +13,7 @@ public class PluginsCommand extends AbstractPbCommand {
     }
 
     @Override
-    public void build(LiteralArgumentBuilder<CommandSource> builder) {
+    public void build(LiteralArgumentBuilder<PBCommandSource> builder) {
         builder.executes(ctx -> {
             print(NameableComponent
                     .builder(pingBypass.getPluginManager())

@@ -4,9 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.earth.pingbypass.PingBypass;
 import me.earth.pingbypass.api.command.CommandManager;
-import me.earth.pingbypass.api.command.CommandSource;
-import me.earth.pingbypass.api.command.DelegatingCommandSource;
-import net.minecraft.client.GuiMessageTag;
+import me.earth.pingbypass.api.command.PBCommandSource;
+import me.earth.pingbypass.api.command.DelegatingPBCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
@@ -16,8 +15,9 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.text.MutableText;
 import net.minecraft.network.chat.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -33,11 +33,11 @@ import static me.earth.pingbypass.api.input.Keys.*;
  */
 // TODO: tooltips don't seem to get displayed?
 public class CommandScreen extends Screen {
-    private static final Component USAGE_TEXT = Component.translatable("chat_screen.usage");
+    private static final Text USAGE_TEXT = Text.translatable("chat_screen.usage");
     private static final double MOUSE_SCROLL_SPEED = 7.0;
     private static final int TOOLTIP_MAX_WIDTH = 210;
 
-    private final CommandSource suggestionProvider;
+    private final PBCommandSource suggestionProvider;
     private final ChatComponent chatComponent;
     private final PingBypass pingBypass;
     private final Minecraft minecraft;
@@ -54,7 +54,7 @@ public class CommandScreen extends Screen {
         this.background = background;
         this.pingBypass = pingBypass;
         this.minecraft = pingBypass.getMinecraft();
-        this.suggestionProvider = new DelegatingCommandSource(minecraft, pingBypass);
+        this.suggestionProvider = new DelegatingPBCommandSource(minecraft, pingBypass);
         this.chatComponent = minecraft.gui.getChat();
     }
 
@@ -64,7 +64,7 @@ public class CommandScreen extends Screen {
         historyPos = chatComponent.getRecentChat().size();
         input = new EditBox(minecraft.fontFilterFishy, 2, height - 12, width - 4, 12, Component.literal("CommandsChat")) {
             @Override
-            protected @NotNull MutableComponent createNarrationMessage() {
+            protected @NotNull MutableText createNarrationMessage() {
                 return super.createNarrationMessage().append(commandSuggestions.getNarrationMessage());
             }
 
@@ -188,25 +188,20 @@ public class CommandScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int x, int y, float delta) {
-        // background.render(graphics, x, y, delta); would've been nice to just display this on the TitleScreen but bugs
         super.render(graphics, x, y, delta);
         chatComponent.render(graphics, tickCount, x, y);
-        RenderSystem.clear(256, Minecraft.ON_OSX);
+        RenderSystem.clear(256, false);
         setFocused(input);
-        // TODO: this is extremely dark!
-        graphics.fill(2, this.height - 14, this.width - 2, this.height - 2, this.minecraft.options.getBackgroundColor(Integer.MIN_VALUE));
+        graphics.fill(2, this.height - 14, this.width - 2, this.height - 2,
+                this.minecraft.options.getBackgroundColor(Integer.MIN_VALUE));
         input.render(graphics, x, y, delta);
         commandSuggestions.render(graphics, x, y);
-        GuiMessageTag messageTagAt = chatComponent.getMessageTagAt(x, y);
-        if (messageTagAt != null && messageTagAt.text() != null) {
-            graphics.renderTooltip(font, font.split(messageTagAt.text(), TOOLTIP_MAX_WIDTH), x, y);
-        } else {
-            Style componentStyleAt = getComponentStyleAt(x, y);
-            if (componentStyleAt != null && componentStyleAt.getHoverEvent() != null) {
-                graphics.renderComponentHoverEffect(font, componentStyleAt, x, y);
-            }
+        Style styleAt = getComponentStyleAt(x, y); // get Style at mouse
+        if (styleAt != null && styleAt.getHoverEvent() != null) {
+            graphics.renderComponentHoverEffect(font, styleAt, x, y);
         }
     }
+
 
     @Override
     public boolean isPauseScreen() {

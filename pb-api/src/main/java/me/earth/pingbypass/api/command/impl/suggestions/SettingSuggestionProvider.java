@@ -5,20 +5,20 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import lombok.RequiredArgsConstructor;
-import me.earth.pingbypass.api.command.CommandSource;
+import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.command.impl.FindsArgument;
 import me.earth.pingbypass.api.setting.Setting;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.command.CommandSource;
 
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor(staticName = "of")
-public class SettingSuggestionProvider implements SuggestionProvider<CommandSource>, FindsArgument {
+public class SettingSuggestionProvider implements SuggestionProvider<PBCommandSource>, FindsArgument {
     private final String settingArgName;
     private final String argName;
 
     @Override
-    public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSource> context,
+    public CompletableFuture<Suggestions> getSuggestions(CommandContext<PBCommandSource> context,
                                                          SuggestionsBuilder builder) {
         Setting<?> setting = getArgument(context, settingArgName, Setting.class);
         if (setting == null) {
@@ -26,7 +26,7 @@ public class SettingSuggestionProvider implements SuggestionProvider<CommandSour
         }
 
         if (!hasArgument(context, argName)) {
-            return SharedSuggestionProvider.suggest(setting.getArgumentType().getExamples(), builder);
+            return CommandSource.suggestMatching(setting.getArgumentType().getExamples(), builder);
         }
 
         return setting.getArgumentType().listSuggestions(context, builder);

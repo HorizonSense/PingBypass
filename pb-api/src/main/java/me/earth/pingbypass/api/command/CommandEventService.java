@@ -6,11 +6,11 @@ import me.earth.pingbypass.api.event.SubscriberImpl;
 import me.earth.pingbypass.api.event.chat.ChatEvent;
 import me.earth.pingbypass.api.event.chat.CommandSuggestionEvent;
 import me.earth.pingbypass.api.event.listeners.generic.Listener;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
+import net.minecraft.util.Formatting;
+import net.minecraft.text.Text;
 
 public class CommandEventService extends SubscriberImpl {
-    public CommandEventService(CommandManager commandManager, CommandSource source) {
+    public CommandEventService(CommandManager commandManager, PBCommandSource source) {
         listen(new Listener<ChatEvent>() {
             @Override
             public void onEvent(ChatEvent event) {
@@ -19,7 +19,7 @@ public class CommandEventService extends SubscriberImpl {
                     try {
                         commandManager.execute(event.getMessage().substring(prefix.length()), source);
                     } catch (CommandSyntaxException e) {
-                        source.getMinecraft().gui.getChat().addMessage(Component.literal(e.getMessage()).withStyle(ChatFormatting.RED));
+                        source.getMinecraft().gui.getChat().addMessage(Text.literal(e.getMessage()).withStyle(Formatting.RED));
                     }
 
                     event.setCancelled(true);

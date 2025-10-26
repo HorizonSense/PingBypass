@@ -9,8 +9,8 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.earth.pingbypass.api.traits.Nameable;
 import me.earth.pingbypass.api.traits.Streamable;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.chat.Component;
+import net.minecraft.command.CommandSource;
+import net.minecraft.text.Text;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -35,7 +35,7 @@ public interface NameableArgumentType<T extends Nameable> extends ArgumentType<T
 
         if (result.isEmpty()) {
             throw new CommandSyntaxException(COULD_NOT_FIND_NAMEABLE,
-                    Component.literal("Could not find %s with name '%s'!".formatted(getType(), arg)));
+                    Text.literal("Could not find %s with name '%s'!".formatted(getType(), arg)));
         }
 
         return result.get();
@@ -43,7 +43,7 @@ public interface NameableArgumentType<T extends Nameable> extends ArgumentType<T
 
     @Override
     default <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(getNameables().stream().map(Nameable::getName), builder);
+        return CommandSource.suggestMatching(getNameables().stream().map(Nameable::getName), builder);
     }
 
     @Override

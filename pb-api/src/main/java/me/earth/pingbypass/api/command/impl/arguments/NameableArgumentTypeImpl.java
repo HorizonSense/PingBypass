@@ -1,7 +1,7 @@
 package me.earth.pingbypass.api.command.impl.arguments;
 
 import lombok.Getter;
-import me.earth.pingbypass.api.command.CommandSource;
+import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.command.impl.builder.ExtendedRequiredArgumentBuilder;
 import me.earth.pingbypass.api.traits.Nameable;
 import me.earth.pingbypass.api.traits.Streamable;
@@ -24,7 +24,7 @@ public class NameableArgumentTypeImpl<T extends Nameable> implements NameableArg
     }
 
     @SafeVarargs
-    public static <V extends Nameable> ExtendedRequiredArgumentBuilder<CommandSource, V> builder(
+    public static <V extends Nameable> ExtendedRequiredArgumentBuilder<PBCommandSource, V> builder(
             String name, V... args) {
         return new ExtendedRequiredArgumentBuilder<>(of(name, args), name);
     }

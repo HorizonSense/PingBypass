@@ -3,8 +3,8 @@ package me.earth.pingbypass.api.command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.util.annotation.MethodsReturnNonnullByDefault;
+import net.minecraft.command.CommandSource;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 @MethodsReturnNonnullByDefault
-public interface EmptySuggestionProvider extends SharedSuggestionProvider {
+public interface EmptySuggestionProvider extends CommandSource {
     EmptySuggestionProvider INSTANCE = new EmptySuggestionProvider() {};
 
     @Override

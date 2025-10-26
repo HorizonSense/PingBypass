@@ -12,14 +12,14 @@ import me.earth.pingbypass.api.command.impl.AbstractGenericCommand;
 import me.earth.pingbypass.api.command.impl.arguments.CommandArgument;
 import me.earth.pingbypass.api.traits.Nameable;
 import me.earth.pingbypass.api.command.components.NameableComponent;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 
 import java.util.Map;
 
 // TODO: do not list module commands?
 public abstract class AbstractHelpCommand<S> extends AbstractGenericCommand<S> {
     private static final SimpleCommandExceptionType ERROR_FAILED =
-            new SimpleCommandExceptionType(Component.translatable("commands.help.failed"));
+            new SimpleCommandExceptionType(Text.translatable("commands.help.failed"));
     private final GenericCommandManager<S, ?> commandManager;
 
     public AbstractHelpCommand(GenericCommandManager<S, ?> commandManager, String name, String description) {
@@ -27,7 +27,7 @@ public abstract class AbstractHelpCommand<S> extends AbstractGenericCommand<S> {
         this.commandManager = commandManager;
     }
 
-    protected abstract void print(S source, Component component);
+    protected abstract void print(S source, Text component);
 
     @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -50,7 +50,7 @@ public abstract class AbstractHelpCommand<S> extends AbstractGenericCommand<S> {
             Map<CommandNode<S>, String> map =
                     commandManager.getSmartUsage(((ParsedCommandNode) Iterables.getLast(results.getContext().getNodes())).getNode(), ctx.getSource());
             for (String string : map.values()) {
-                print(ctx.getSource(), Component.literal(commandManager.getPrefix() + results.getReader().getString() + " " + string));
+                print(ctx.getSource(), Text.literal(commandManager.getPrefix() + results.getReader().getString() + " " + string));
             }
 
             return map.size();

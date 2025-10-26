@@ -2,10 +2,10 @@ package me.earth.pingbypass.api.command.commands;
 
 import me.earth.pingbypass.PingBypass;
 import me.earth.pingbypass.api.command.Command;
-import me.earth.pingbypass.api.command.CommandSource;
-import net.minecraft.network.chat.Component;
+import me.earth.pingbypass.api.command.PBCommandSource;
+import org.w3c.dom.Text;
 
-public final class HelpCommand extends AbstractHelpCommand<CommandSource> implements Command {
+public final class HelpCommand extends AbstractHelpCommand<PBCommandSource> implements Command {
     private final PingBypass pingBypass;
 
     public HelpCommand(PingBypass pingBypass) {
@@ -14,7 +14,7 @@ public final class HelpCommand extends AbstractHelpCommand<CommandSource> implem
     }
 
     @Override
-    protected void print(CommandSource source, Component component) {
+    protected void print(PBCommandSource source, Text component) {
         pingBypass.getChat().send(component);
     }
 

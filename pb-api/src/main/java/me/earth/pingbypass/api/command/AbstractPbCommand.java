@@ -2,20 +2,18 @@ package me.earth.pingbypass.api.command;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import me.earth.pingbypass.PingBypass;
-import me.earth.pingbypass.api.command.Chat;
-import me.earth.pingbypass.api.command.CommandSource;
 import me.earth.pingbypass.api.command.impl.AbstractCommand;
 import me.earth.pingbypass.api.command.impl.builder.SuccessfulCommand;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 public abstract class AbstractPbCommand extends AbstractCommand {
-    // TODO: this is not really needed anymore, use CommandSource everywhere!
+    // TODO: this is not really needed anymore, use PBCommandSource everywhere!
     protected final PingBypass pingBypass;
-    protected final Minecraft mc;
+    protected final MinecraftClient mc;
 
-    public AbstractPbCommand(String name, String description, PingBypass pingBypass, Minecraft mc) {
+    public AbstractPbCommand(String name, String description, PingBypass pingBypass, MinecraftClient mc) {
         super(name, description);
         this.pingBypass = pingBypass;
         this.mc = mc;
@@ -26,10 +24,10 @@ public abstract class AbstractPbCommand extends AbstractCommand {
     }
 
     @SafeVarargs
-    protected final <T extends ArgumentBuilder<CommandSource, T>> void executesWithOptionalArguments(
-            SuccessfulCommand<CommandSource> command,
+    protected final <T extends ArgumentBuilder<PBCommandSource, T>> void executesWithOptionalArguments(
+            SuccessfulCommand<PBCommandSource> command,
             T builder,
-            ArgumentBuilder<CommandSource, ?>... arguments) {
+            ArgumentBuilder<PBCommandSource, ?>... arguments) {
         builder.executes(command);
         for (var argument : arguments) {
             builder.then(argument.executes(command));
@@ -40,15 +38,15 @@ public abstract class AbstractPbCommand extends AbstractCommand {
         return pingBypass.getChat();
     }
 
-    protected void print(Component message) {
+    protected void print(Text message) {
         getChat().send(message);
     }
 
     protected void error(String message) {
-        getChat().send(Component.literal(message).withStyle(ChatFormatting.RED));
+        getChat().send(Text.literal(message).withStyle(Formatting.RED));
     }
 
-    protected void print(Component message, String identifier) {
+    protected void print(Text message, String identifier) {
         getChat().send(message, identifier);
     }
 

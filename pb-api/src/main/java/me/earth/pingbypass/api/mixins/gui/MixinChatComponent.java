@@ -2,10 +2,9 @@ package me.earth.pingbypass.api.mixins.gui;
 
 import me.earth.pingbypass.api.ducks.network.IChatComponent;
 import net.minecraft.client.GuiMessage;
-import net.minecraft.client.GuiMessageTag;
 import net.minecraft.client.gui.components.ChatComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignature;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,9 +22,7 @@ public abstract class MixinChatComponent implements IChatComponent {
 
     @Override
     @Invoker("addMessage")
-    public abstract void invokeAddMessage(Component component, @Nullable MessageSignature signature, int addedTime,
-                          @Nullable GuiMessageTag messageTag, boolean refresh);
-
+    public abstract void invokeAddMessage(Text component, @Nullable MessageSignature signature);
     @Override
     public void deleteImmediately(@Nullable MessageSignature signature, boolean all) {
         if (signature == null) {

@@ -11,7 +11,7 @@ import me.earth.pingbypass.api.players.PlayerRegistry;
 import me.earth.pingbypass.api.plugin.PluginManager;
 import me.earth.pingbypass.api.security.SecurityManager;
 import me.earth.pingbypass.api.side.Side;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 
 public interface PingBypass {
     EventBus getEventBus();
@@ -36,7 +36,7 @@ public interface PingBypass {
 
     PlayerRegistry getEnemyManager();
 
-    Minecraft getMinecraft();
+    MinecraftClient getMinecraft();
 
     Chat getChat();
 

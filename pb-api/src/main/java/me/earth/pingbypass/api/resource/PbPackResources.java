@@ -4,7 +4,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.ExtensionMethod;
 import lombok.extern.slf4j.Slf4j;
 import me.earth.pingbypass.api.files.PathUtil;
-import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.util.annotation.MethodsReturnNonnullByDefault;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.PackType;

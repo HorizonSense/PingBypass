@@ -1,6 +1,6 @@
 package me.earth.pingbypass.api.command.components;
 
-import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.text.ClickEvent;
 
 public class DynamicClickEvent extends ClickEvent {
     public DynamicClickEvent() {

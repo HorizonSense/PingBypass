@@ -5,28 +5,27 @@ import me.earth.pingbypass.PingBypass;
 import me.earth.pingbypass.api.command.impl.arguments.StringArgument;
 import me.earth.pingbypass.api.command.impl.builder.ExtendedLiteralArgumentBuilder;
 import me.earth.pingbypass.api.command.impl.builder.ExtendedRequiredArgumentBuilder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.command.CommandSource;
 
-public interface CommandSource extends SharedSuggestionProvider {
+public interface PBCommandSource extends CommandSource {
     PingBypass getPingBypass();
 
-    Minecraft getMinecraft();
+    MinecraftClient getMinecraft();
 
     default Chat getChat() {
         return getPingBypass().getChat();
     }
 
-    static <T> ExtendedRequiredArgumentBuilder<CommandSource, T> argument(String name, ArgumentType<T> type) {
+    static <T> ExtendedRequiredArgumentBuilder<PBCommandSource, T> argument(String name, ArgumentType<T> type) {
         return new ExtendedRequiredArgumentBuilder<>(type, name);
     }
 
-    static ExtendedLiteralArgumentBuilder<CommandSource> literal(String literal) {
+    static ExtendedLiteralArgumentBuilder<PBCommandSource> literal(String literal) {
         return new ExtendedLiteralArgumentBuilder<>(literal);
     }
 
-    static ExtendedRequiredArgumentBuilder<CommandSource, String> greedy(String name) {
+    static ExtendedRequiredArgumentBuilder<PBCommandSource, String> greedy(String name) {
         return new ExtendedRequiredArgumentBuilder<>(StringArgument.greedy(name), name);
     }
-
 }

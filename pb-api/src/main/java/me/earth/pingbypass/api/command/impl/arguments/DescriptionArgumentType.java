@@ -3,10 +3,10 @@ package me.earth.pingbypass.api.command.impl.arguments;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import me.earth.pingbypass.api.command.CommandSource;
+import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.traits.HasDescription;
 import me.earth.pingbypass.api.traits.Nameable;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
@@ -28,7 +28,7 @@ public interface DescriptionArgumentType<T extends Nameable & HasDescription> ex
         String remaining = builder.getRemaining().toLowerCase(Locale.ROOT);
         for (N nameable : nameables) {
             if (matchesSubStr(remaining, nameable.getNameLowerCase())) {
-                builder.suggest(nameable.getName(), Component.literal(nameable.getDescription()));
+                builder.suggest(nameable.getName(), Text.literal(nameable.getDescription()));
             }
         }
 
@@ -36,7 +36,7 @@ public interface DescriptionArgumentType<T extends Nameable & HasDescription> ex
     }
 
     /**
-     * @see CommandSource#matchesSubStr(String, String)
+     * @see PBCommandSource#matchesSubStr(String, String)
      */
     private static boolean matchesSubStr(String subString, String string) {
         for(int i = 0; !string.startsWith(subString, i); ++i) {

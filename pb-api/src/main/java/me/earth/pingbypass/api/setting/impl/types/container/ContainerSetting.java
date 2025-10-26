@@ -17,7 +17,8 @@ import me.earth.pingbypass.api.traits.Nameable;
 import me.earth.pingbypass.api.traits.NameableImpl;
 import me.earth.pingbypass.api.traits.Streamable;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -65,12 +66,12 @@ public class ContainerSetting<T extends Nameable> extends SettingImpl<Container<
         return getValue().stream();
     }
 
-    private static <T extends Nameable> Function<Container<T>, Component> defaultComponentFactory() {
+    private static <T extends Nameable> Function<Container<T>, Text> defaultComponentFactory() {
         return container -> {
-            MutableComponent component = Component.literal("");
+            MutableText component = Text.literal("");
             Iterator<T> itr = container.iterator();
             while (itr.hasNext()) {
-                component.append(Component.literal(itr.next().getName()));
+                component.append(Text.literal(itr.next().getName()));
                 if (itr.hasNext()) {
                     component.append(", ");
                 }

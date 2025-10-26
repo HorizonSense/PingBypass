@@ -3,8 +3,7 @@ package me.earth.pingbypass.api.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import lombok.experimental.UtilityClass;
-import me.earth.pingbypass.api.command.EmptySuggestionProvider;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.command.CommandSource;
 
 @UtilityClass
 public class ParseResultUtil {
@@ -16,8 +15,8 @@ public class ParseResultUtil {
         return DUMMY.parse("", source);
     }
 
-    public static ParseResults<SharedSuggestionProvider> dummy() {
-        return dummy(EmptySuggestionProvider.INSTANCE);
+    public static ParseResults<CommandSource> dummy() {
+        return dummy((CommandSource) EmptySuggestionProvider.INSTANCE);
     }
 
 }

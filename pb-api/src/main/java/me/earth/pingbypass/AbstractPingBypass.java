@@ -21,7 +21,7 @@ import me.earth.pingbypass.api.plugin.PluginManager;
 import me.earth.pingbypass.api.plugin.impl.PluginManagerImpl;
 import me.earth.pingbypass.api.security.SecurityManager;
 import me.earth.pingbypass.api.side.Side;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 
 /**
  * Abstract base class for {@link PingBypass}.
@@ -39,7 +39,7 @@ public abstract class AbstractPingBypass implements PingBypass {
     private final PluginManager pluginManager;
     private final PlayerRegistry friendManager;
     private final PlayerRegistry enemyManager;
-    private final Minecraft minecraft;
+    private final MinecraftClient minecraft;
     private final Chat chat;
     private final Side side;
 
@@ -47,7 +47,7 @@ public abstract class AbstractPingBypass implements PingBypass {
                                  ModuleManager moduleManager, ConfigManager configManager, FileManager fileManager,
                                  FileManager rootFileManager, SecurityManager securityManager,
                                  PluginManager pluginManager, PlayerRegistry friendManager, PlayerRegistry enemyManager,
-                                 Minecraft minecraft, Chat chat, Side side) {
+                                 MinecraftClient minecraft, Chat chat, Side side) {
         this.eventBus = eventBus;
         this.keyBoardAndMouse = keyBoardAndMouse;
         this.commandManager = commandManager;
@@ -73,7 +73,7 @@ public abstract class AbstractPingBypass implements PingBypass {
      * @param minecraft the Minecraft client instance to use.
      * @param side the Side this PingBypass instance will operate on.
      */
-    protected AbstractPingBypass(KeyboardAndMouse keyBoardAndMouse, PreLaunchService preLaunchService, SecurityManager securityManager, Minecraft minecraft, Side side) {
+    protected AbstractPingBypass(KeyboardAndMouse keyBoardAndMouse, PreLaunchService preLaunchService, SecurityManager securityManager, MinecraftClient minecraft, Side side) {
         this(PingBypassApi.getEventBus(), keyBoardAndMouse, new CommandManagerImpl(), new ModuleManagerImpl(new Categories()), new ConfigManagerImpl(),
                 preLaunchService.getFileManager(side), preLaunchService.getRootFileManager(), securityManager, new PluginManagerImpl(), new PlayerRegistryImpl(),
                 new PlayerRegistryImpl(), minecraft, new ChatImpl(minecraft), side);

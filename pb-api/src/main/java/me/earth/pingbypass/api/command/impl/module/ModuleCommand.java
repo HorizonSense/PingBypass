@@ -4,7 +4,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import lombok.experimental.ExtensionMethod;
-import me.earth.pingbypass.api.command.CommandSource;
+import me.earth.pingbypass.api.command.PBCommandSource;
 import me.earth.pingbypass.api.command.impl.AbstractCommand;
 import me.earth.pingbypass.api.command.impl.PrintsInContextChat;
 import me.earth.pingbypass.api.command.impl.UsesExtendedBuilders;
@@ -15,9 +15,9 @@ import me.earth.pingbypass.api.command.impl.util.ComponentUtil;
 import me.earth.pingbypass.api.module.Module;
 import me.earth.pingbypass.api.setting.Setting;
 import me.earth.pingbypass.api.setting.impl.SettingUtil;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 
-import static net.minecraft.ChatFormatting.*;
+import static net.minecraft.util.Formatting.*;
 
 @ExtensionMethod(SettingUtil.class)
 public class ModuleCommand extends AbstractCommand implements PrintsInContextChat, UsesExtendedBuilders {
@@ -29,7 +29,7 @@ public class ModuleCommand extends AbstractCommand implements PrintsInContextCha
     }
 
     @Override
-    public void build(LiteralArgumentBuilder<CommandSource> builder) {
+    public void build(LiteralArgumentBuilder<PBCommandSource> builder) {
         if (module instanceof HasCustomModuleCommand hasCustomModuleCommand) {
             hasCustomModuleCommand.build(builder);
             if (hasCustomModuleCommand.overrideCompletely()) {
@@ -37,18 +37,18 @@ public class ModuleCommand extends AbstractCommand implements PrintsInContextCha
             }
         }
 
-        builder.executes((SuccessfulCommand<CommandSource>) ctx -> {
+        builder.executes((SuccessfulCommand<PBCommandSource>) ctx -> {
             print(ctx, ComponentUtil.getComponent(module, AQUA)
-                    .append(Component.literal(" - ").withStyle(GRAY))
-                    .append(Component.literal(module.getCategory().getName()).withStyle(WHITE)));
+                    .append(Text.literal(" - ").withStyle(GRAY))
+                    .append(Text.literal(module.getCategory().getName()).withStyle(WHITE)));
             module.stream().forEach(setting ->
                 print(ctx, ComponentUtil.getComponent(setting, WHITE)
-                    .append(Component.literal(" : ").withStyle(GRAY))
+                    .append(Text.literal(" : ").withStyle(GRAY))
                         // TODO: see TODOS in ComponentUtil and SettingImpl
                     .append(setting.getValueComponent())));
         }).then(arg("setting", new SettingArgument(module)).executes(ctx -> {
             Setting<?> setting = ctx.getArgument("setting", Setting.class);
-            print(ctx, ComponentUtil.getComponent(setting, WHITE).append(Component.literal(": ").withStyle(GRAY).append(setting.getValueComponent())));
+            print(ctx, ComponentUtil.getComponent(setting, WHITE).append(Text.literal(": ").withStyle(GRAY).append(setting.getValueComponent())));
         }).then(arg("value", StringArgumentType.greedyString()) // TODO: might regret greedyString for modules with custom commands?
             .suggests(SettingSuggestionProvider.of("setting", "value"))
             .executes(ctx -> {
@@ -59,7 +59,7 @@ public class ModuleCommand extends AbstractCommand implements PrintsInContextCha
                 print(ctx, ComponentUtil.getComponent(module, WHITE)
                         .append(" ")
                         .append(ComponentUtil.getComponent(setting, AQUA))
-                        .append(Component.literal(" set to ").withStyle(WHITE))
+                        .append(Text.literal(" set to ").withStyle(WHITE))
                         .append(setting.getValueComponent()));
             })));
     }
