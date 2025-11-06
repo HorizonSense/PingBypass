@@ -91,7 +91,7 @@ public class CommandScreen extends Screen {
     }
 
     @Override
-    public void resize(@NotNull Minecraft arg, int i, int j) {
+    public void resize(@NotNull MinecraftClient arg, int i, int j) {
         background.resize(arg, i, j);
         String string = input.getValue();
         init(arg, i, j);
@@ -215,7 +215,7 @@ public class CommandScreen extends Screen {
         out.add(NarratedElementType.USAGE, USAGE_TEXT);
         String string = input.getValue();
         if (!string.isEmpty()) {
-            out.nest().add(NarratedElementType.TITLE, Component.translatable("chat_screen.message", string));
+            out.nest().add(NarratedElementType.TITLE, Text.translatable("chat_screen.message", string));
         }
     }
 
@@ -267,7 +267,7 @@ public class CommandScreen extends Screen {
                 try {
                     commandManager.execute(message.substring(prefix.length()), suggestionProvider);
                 } catch (CommandSyntaxException e) {
-                    Minecraft.getInstance().gui.getChat().addMessage(ComponentUtils.fromMessage(e.getRawMessage()));
+                    MinecraftClient.getInstance().gui.getChat().addMessage(ComponentUtils.fromMessage(e.getRawMessage()));
                 }
             }
         }
